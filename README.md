@@ -1,5 +1,9 @@
 # Diseño de sistemas
 
+## Tabla de contenido
+
+1. [Arquitectura de computadores](https://github.com/martinwilches/system_design/edit/main/README.md#arquitectura-de-computadores)
+
 ## Arquitectura de computadores
 
 Sistema de capas optimizadas para realizar diferentes tareas.
