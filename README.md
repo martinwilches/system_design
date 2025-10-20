@@ -63,3 +63,41 @@ El manejo de las solicitudes recibidas por la aplicacion en produccion, es admin
 - Identificar el problema registrado a traves de los servicios de __Logging__ & __Monotoring__
 - Replicar el error en un entorno seguro, nunca realizar la depuracion directamente en el entorno de produccion
 - Una vez se corriga el error se implementa una solucion temporal ___(hot fix | parche rapido)___ y luego se desarrolla una solucion duradera.
+
+## Pilares del diseño de sistemas
+
+- Eficiencia: Uso optimo de recursos.
+- Mantenibilidad: Entendimiento del sistema por parte de futuros desarrolladores.
+- Escalabilidad: Crecimiento del sistema con su base de usuarios.
+
+### Elementos clave en el diseño de sistemas
+
+#### Mover datos
+
+Transportar datos de una parte del sistema a otra.
+- Peticion cliente servidor
+- Comunicacion entre bases de datos
+
+#### Almacenar datos
+
+- Patrones de acceso
+- Estrategias de indexacion
+- Soluciones de respaldo
+
+#### Transformar datos
+
+Convertir datos en informacion significativa
+
+### Teorema CAP (Consistencia, disponibilidad y toleracion a la particion)
+
+#### Consistencia
+
+Todos los nodos del sistema distribuido tienen los mismos datos. Si se hace un cambio en un nodo, este debe reflejarse de forma inmediata en el resto.
+
+### Disponibilidad
+
+El sistema siempre debe estar disponible respondiendo a las solicitudes de los usuarios.
+
+### Tolerancia a la particion
+
+Si hay una interrupcion en la comunicacion entre los nodos, el sistema debe seguir funcionando.
