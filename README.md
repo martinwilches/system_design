@@ -269,3 +269,36 @@ nslookup google.com
 | HTTPS    | 443    |
 | SSH      | 22     |
 | MySQL    | 3306   |
+
+## Protocolos de la capa de aplicacion
+
+### HTTP (HyperText Transfer Protocol)
+
+Es un protocolo de comunicacion basado en TCP/IP, el cual sigue un modelo de peticion-respuesta. HTTP es un protocolo sin estado (stateless) lo que significa que el servidor no guarda informacion sobre las peticiones anteriores, por lo cual toda la informacion relevante debe enviarse en cada solicitud.
+
+#### Codigos de estado
+
+- 2xx Success Codes
+  - 200 OK - Solicitud exitosa
+  - 201 Created - Nuevo recurso creado
+  - 204 No Content - El servidor proceso la solicitud, pero no retorna ningun contenido
+- 3xx Redirection Codes
+  - 301 Moved permanently - La URL del recurso solicitado ha sido cambiada permanentemente
+  - 302 Found - El recurso esta temporalmente localizado en otra URI
+  - 304 Not Modified - La version en cache es valida y puede ser usada
+- 4xx Client Errors Codes
+  - 400 Bad Request - El servidor no puede procesar la solicitud debido a un error del cliente
+  - 401 Unauthorized - Autenticacion requerida
+  - 403 Forbidden - El servidor entiende la peticion pero rechaza autorizarla
+  - 404 Not Found - El servidor no puede encontrar el recurso solicitado
+  - 429 Too Many Requests - El servidor ha enviado muchas peticiones en un corto periodo de tiempo
+- 5xx Server Error Codes
+  - 500 Internal Server Error - Mensaje de error generico cuando el servidor encuentra una condicion inesperada
+ 
+#### Metodos HTTP
+
+- __GET:__ Obtener datos
+- __POST:__ Crear datos en el servidor
+- __PUT:__ Modificar un recurso existente
+- ___PATCH:__ Modificar informacion especifica de un recurso existente
+- __DELETE:__ Eliminar datos
