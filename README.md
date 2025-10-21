@@ -69,33 +69,99 @@ Conecta todos los componentes: CPU, RAM, GPU, discos etc.
 
 Proporciona las rutas fisicas y electricas para la comunicacion interna del sistema.
 
-## Arquitectura de la aplicacion en produccion
+## Arquitectura de aplicaciones en produccion
 
-### CI/CD
+Un entorno de produccion debe ser seguro, automatizado y escalable.
 
-__Integracion Continua__ / __Despliegue Continuo__, se asegura que el codigo vaya desde el repositorio a traves de una serie de pruebas y verificaciones, hasta el servidor de produccion sin ninguna intervencion manual.
+### CI/CD - Integracion y Despliegue Continuo
 
-> Jenkins y GitHub Actions son plataformas que pueden ser configuradas para automatizar los procesos de implementacion
+Permite pasar el codigo desde el repositorio hasta produccion automaticamente.
 
-### Balanceo de carga y distribucion
+Ejemplo de pipeline (GitHub Actions)
 
-El manejo de las solicitudes recibidas por la aplicacion en produccion, es administrado por los __balanceadores de cargas__ y __proxys inversos__ como por ejemplo __NGNIX__, quien se asegura que las peticiones se distribuyan de manera uniforme entre multiples servidores asegurando una experiencia fluida para el usuario.
+```yml
+name: CI/CD Pipeline
+on: [push]
+jobs:
+  build: ubuntu-latest
+  steps:
+    - uses: actions/checkout@v3
+    - name: Install dependencies
+      run: npm install
+    - name: Run tests
+      run: npm test
+    - name: Deploy
+      run: pm2 deploy ecosystem.config.js production
+```
 
-- __Servidor de almacenamiento externo:__ No se ejecuta en el servidor de produccion, sino que se conecta a este mediante una red. Su funcion es el almacenamiento durante el transito de datos.
-- __Logging & Monitoring:__ Sistemas de registro y monitoreo que vigilan cada micro-interaccion de almacenamiento de registros y analisis de datos.
+#### Herramientas comunes
 
-> Es una practica estandar almacenar registros externos fuera del servidor de produccion principal
+- Jenkins
+- GitHub Actions
+- Gitlab CI/CD
 
-- __pm2:__ Herramienta de backend utilizada para registro y monitoreo.
-- __sentry:__ Herramienta de front-end utilizada para capturar e informar errores en tiempo real.
+### Balanceo de carga y Proxy inverso
 
-> Un sistema de alerta puede enviar notificaciones que informen sobre las anomalias presentadas
+Distribuyen las solicitudes entre mmultiples servidores.
 
-#### Depuracion
+Ejemplo con NGINX
+```nginx
+upstream app_cluster {
+  server app1.local:3000;
+  server app2.local:3000;
+}
 
-- Identificar el problema registrado a traves de los servicios de __Logging__ & __Monotoring__
-- Replicar el error en un entorno seguro, nunca realizar la depuracion directamente en el entorno de produccion
-- Una vez se corriga el error se implementa una solucion temporal ___(hot fix | parche rapido)___ y luego se desarrolla una solucion duradera.
+server {
+  listen 80;
+  location / {
+    proxy_pass: http://app_cluster;
+  }
+}
+```
+
+- Distribuyen el rendimiento y la disponibilidad.
+- Si un servidor cae, el trafico se redirige automaticamente.
+
+### Servidor de almacenamiento interno
+
+Permite almacenar datos fuera del servidor principal (por ejemplo, backups o archivos subidos por usuarios).
+
+- AWS S3
+- Google Cloud Storage
+- NAS (Network Attached Storage)
+
+Configuracion tipica (Laravel `.env`)
+```env
+FILESYSTEM_DISK=s3
+AWS_BUCKET=myapp-bucket
+AWS_DEFAULT_REGION=us-east-1
+```
+
+### Logging y Monitoring
+
+Controlan la salud del sistema, registran errores y miden rendimiento.
+
+#### Herramientas comunes
+
+- __PM2:__ Monitoreo de proceso Node.js
+```bash
+pm2 start server.js --name api-prod
+pm2 logs api-prod
+```
+- __Sentry:__ Captura errores en frontend y backend
+- __Grafana / Prometheus:__ Metricas de rendimiento y alertas
+
+> Nunca se depura directamente en produccion.
+
+### Depuracion y Hot Fix
+
+> Nunca depurar en produccion directamente
+
+1. Identificar el error en logs o alertas.
+2. Replicar el problema en un entorno seguro.
+3. Aplicar un hotfix (solucion temporal).
+4. Desarrollar una solucion permanente.
+5. Actualizar documentacion y tests.
 
 ## Pilares del diseño de sistemas
 
