@@ -75,6 +75,7 @@ El manejo de las solicitudes recibidas por la aplicacion en produccion, es admin
 #### Mover datos
 
 Transportar datos de una parte del sistema a otra.
+
 - Peticion cliente servidor
 - Comunicacion entre bases de datos
 
@@ -90,14 +91,34 @@ Convertir datos en informacion significativa
 
 ### Teorema CAP (Consistencia, disponibilidad y toleracion a la particion)
 
-#### Consistencia
+#### Consistencia (Consistency)
 
 Todos los nodos del sistema distribuido tienen los mismos datos. Si se hace un cambio en un nodo, este debe reflejarse de forma inmediata en el resto.
 
-### Disponibilidad
+#### Disponibilidad (Availability)
 
 El sistema siempre debe estar disponible respondiendo a las solicitudes de los usuarios.
 
-### Tolerancia a la particion
+#### Tolerancia a la particion (Partition Tolerance)
 
 Si hay una interrupcion en la comunicacion entre los nodos, el sistema debe seguir funcionando.
+
+> Un sistema distribuido solo puede lograr 2 propiedades del teorema a la vez, (CA, CP, AP).
+
+- __Confiabilidad:__ Garantizar que el sistema funcione de manera correcta y consistente.
+- __Tolerancia al fallo:__ Prepararse de forma adecuada para cuando el sistema falle o sea atacado.
+- __Redundancia:__ Tener copias de seguridad en caso de que el sistema.
+
+### Velocidad
+
+#### Rendimiento
+
+Cuantos datos el sistema puede manejar sobre cierto periodo de tiempo.
+
+- __Rendimiento del servidor - RPS:__ Entre mas alto sea el valor del `RPS` indica mejor rendimiento.
+- __Rendimiento de la base de datos - QPS:__ Cantidad de consultas que la base de datos puede procesar en un segundo.
+- __Rendimiento de datos - B/s:__ Cantidad de datos transferidos a traves de una red o procesados por un sistema.
+
+#### Latencia
+
+Cuando tiempo se tarde en manejar una sola peticion.
