@@ -2,39 +2,72 @@
 
 ## Arquitectura de computadores
 
-Sistema de capas optimizadas para realizar diferentes tareas.
+Un sistema informatico esta compuesto por capas optimizadas, cada una encargadas de diferentes tareas: almacenamiento, procesamiento, comunicacion y presentacion de datos.
 
-- __bit:__ 0 | 1
-- __byte:__ 8 bits
+- __bit:__ Unidad minima de informacion (0 o 1)
+- __byte:__ 8 bits. Se usa para medir almacenamiento o memoria.
+- __1 KB:__ 1024 bytes
+- __1 MB:__ 1024 KB
+- __1 GB:__ 1024 MB
 
-> bit, unidad mas pequeña en informatica
+> Ejemplo: Un archivo de texto de 2MB contiene aproximadamente 2 millones de caracteres simples.
 
 ### Almacenamiento en disco
 
-- __HDD:__ (Disco de estado rigido)
-- __SSD:__ (Disco de estado solido), lectura y recuparacion de datos mas rapida.
+- __HDD:__ (Hard Disk Drive), disco rigido con partes mecanicas, mas lento pero economico.
+- __SSD:__ (Solid State Drive), disco de estado solido. No contiene partes moviles, mayor velocidad de lectura y escritura.
+
+Ver los discos conectados
+```bash
+lsblk
+```
+
+Montar un disco SSD
+```bash
+sudo mount /dev/sda1 /mnt/ssd
+```
 
 > Los datos almacenados en disco no son volatiles y persisten aun cuando el computador no reciba flujo de energia electrica
 
-### RAM
+### Memoria RAM
 
-Almacena de forma volatil datos que estan siendo procesados de forma activa por el sistema.
+- Volatil, los datos se pierden al apagar el equipo.
+- Almacena informacion temporal para proceso activos.
 
-### Cache
+> Cuando se abre un proyecto en VSCode, el codigo se carga en RAM para poder editarlo sin leer el disco cada segundo.
 
-El proposito de la memoria cache es reducir el tiempo promedio para acceder a los datos, ya que esta memoria almacena datos de uso frecuente optimizando el rendimiento de la CPU.
+Monitorear el uso de RAM (Linux)
+```bash
+free -h
+```
 
-- La computadora realiza una consulta en el cache L1 en busca de datos, si no los encuentra realiza la busqueda en la memoria cache L2 y finalmente L3. Si no se encuentra informacion en la memoria cache, se realiza la busqueda consecutiva en la memoria RAM.
+### Caché
 
-### CPU
+Reduce el tiempo promedio de acceso a los datos.
 
-Obtiene, decodifica y ejecuta operaciones.
+Existen varios niveles.
 
-- El codigo escrito en un lenguaje de programacion de alto nivel (Java, C++, etc), es compilado y traducido a codigo maquina para que posteriormente pueda ser ejecutado.
+- Nivel L1: Se ubica dentro del procesador, es pequeña y su velocidad es muy alta para obtener datos inmediatos de ejecucion.
+- Nivel L2: Se ubica entre la CPU y la memoria RAM, es mediana y su velocidad es alta para obtener datos frecuentes.
+- Nivel L3: Compartida entre nucleos, de tamaño grande y su velocidad es media para coordinacion multinucleo.
 
-### Motherboard (Placa principal)
+> Ejemplo: Si el CPU necesita acceder 100 veces a la variable x, la almacena temporalmente en cache L1 en lugar de acceder al disco o RAM cada vez.
 
-Proporciona la ruta fisica para que los dispositivos de almacenamiento y procesamiento puedan comunicarse entre si.
+### CPU (Unidad Central de Procesamiento)
+
+Responsable de obtener, decodificar y ejecutar instrucciones.
+
+> Ejemplo: Un archivo .cpp se compila con g++ y genera un ejecutable en lenguaje maquina
+```bash
+g++ programa.cpp -o programa
+./programa
+```
+
+### Motherboard (Placa base)
+
+Conecta todos los componentes: CPU, RAM, GPU, discos etc.
+
+Proporciona las rutas fisicas y electricas para la comunicacion interna del sistema.
 
 ## Arquitectura de la aplicacion en produccion
 
