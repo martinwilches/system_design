@@ -151,8 +151,6 @@ pm2 logs api-prod
 - __Sentry:__ Captura errores en frontend y backend
 - __Grafana / Prometheus:__ Metricas de rendimiento y alertas
 
-> Nunca se depura directamente en produccion.
-
 ### Depuracion y Hot Fix
 
 > Nunca depurar en produccion directamente
@@ -166,27 +164,30 @@ pm2 logs api-prod
 ## Pilares del diseño de sistemas
 
 - Eficiencia: Uso optimo de recursos.
-- Mantenibilidad: Entendimiento del sistema por parte de futuros desarrolladores.
-- Escalabilidad: Crecimiento del sistema con su base de usuarios.
+- Mantenibilidad: Facilidad para entender y modificar el sistema.
+- Escalabilidad: Capacidad de crecer con la demanda.
 
-### Elementos clave en el diseño de sistemas
+## Elementos clave en el diseño de sistemas
 
 #### Mover datos
 
-Transportar datos de una parte del sistema a otra.
-
-- Peticion cliente servidor
-- Comunicacion entre bases de datos
+- Peticiones cliente-servidor (HTTP, Websockets)
+- Comunicacion entre microservicios (gRCP, REST)
+- Sincronizacion entre bases de datos
 
 #### Almacenar datos
 
-- Patrones de acceso
-- Estrategias de indexacion
-- Soluciones de respaldo
+- Indexacion eficiente (por ejemplo, indices en MySQL)
+- Respaldos automaticos (cron + AWS S3)
+
+Crear una copia de seguridad de una base de datos MySQL completa y guardarla en un arhivo .sql.
+```bash
+mysqldump -u user -p database > backup.sql
+```
 
 #### Transformar datos
 
-Convertir datos en informacion significativa
+- Limpieza, normalizacion y conversion a formatos utiles (JSON, CSV, XML).
 
 ### Teorema CAP (Consistencia, Disponibilidad y Toleracion a la Particion)
 
