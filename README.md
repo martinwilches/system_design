@@ -214,79 +214,58 @@ Un sistema distribuido puede cumplir solo 2 de las siguientes propiedades:
 
 ## Conceptos basicos de redes
 
-Como se comunican las computadoras entre si.
-
 ### Direccion IP
 
-Identificador unico para cada dispositivo en una red.
+Identificador unico en una red.
 
-- Las direcciones IP V4 son de 32 bits
-- Las direcciones IP V6 son de 128 bits
+- IPv4 -> 32 bits -> 192.168.1.1
+- IPv6 -> 128 bits -> 2001:0db8:85a3::8a2e:0370:7334
 
-Cuando las computadores se comunican a traves de una red, envian y reciben paquetes de datos.
+Cada paquete IP incluye:
 
-- Cada paquete contiene un encabezado IP que contiene la direccion IP remitente y la direccion IP receptor, asegurando que los datos lleguen al destino correcto.
+- IP origen
+- IP destino
+- Informacion del protocolo
 
-### Capa de la aplicacion (Datos HTTP)
+### Capa de comunicacion (TCP/IP)
 
-Traduce la informacion que usa una aplicacion (como un navegador web) a un formato que pueda viajar por la red. HTTP es un protocolo de esta capa y su funcion es permitir la comunicacion entre clientes y servidores web.
+#### Capa de aplicacion (HTTP)
 
-```bash
-HTTP Method: GET
-URI: /example-page.html
-Host: www.example.com
-User-Agent: Mozilla/5.0 (Windows)
-Accept-Language: en-US,en;q=0.9
+Convierte la informacion en un formato transferible por red
+
+Ejemplo de solicitud HTTP
+```pgsql
+GET /index.html HTTP/1.1
+Host: www.ejemplo.com
+User-Agent: Mozilla/5.0
+Accept-Language: es-ES
 ```
 
-### Capa de transporte
+#### Capa de transporte (TCP/UDP)
 
-#### TCP (Transmission Control Protocol)
+- __TCP:__ Confiable, ordenado, orientado a conexion.
+  - Usado en HTTP, FTP, SSH.
+- __UDP:__ Rapido, sin conexion, se pueden perder paquetes de datos.
+  - Usando en videollamadas, juegos online.
+ 
+### DNS (Domain Name Service)
 
-Asegura una comunicacion confiable asegurandose que no solo lleguen los datos si no que no falta nada. Cada paquete de datos tambien incluye un encabezado TCP.
+Traduce nombres de dominio a IPs
 
 ```bash
-Source Port: 53728
-Destination Port: 08
-Sequence Number: 123456789
-Acknowledge Number: 987654321
-Flags: 0x18 (ACK, PSH)
-Checksum: 0x1A2B 
+nslookup google.com
 ```
 
-#### UDP (User Datagram Protocol)
+> Supervisado por ICANN, que acredita registradores (por ejemplo, Namecheap).
 
-Mas rapido que `TCP` pero menos confiable.
+#### Firewalls y puertos
 
-- No establece una conexion antes de enviar los datos y no garantiza el orden de los paquetes.
+- Controlan trafico de red entrante/saliente
+- Identifican servicios mediante puertos
 
-> UDP es preferible para comunicaciones sensibles al tiempo, como videollamadas o transimision en vivo donde la velocidad es crucial y cierta perdida de datos es aceptable.
-
-### DNS (Domain Name System)
-
-Sistema de nombres de dominio, traduce nombres de dominio (como google.com) en direcciones IP.
-
-> Cuando se ingresa una URL en el navegador, este envia una consulta DNS para encontrar la direccion IP correspondiente, lo que le permite conectarse con el servidor y recuperar la pagina web.
-
-El funcionamiento de los DNS esta supervisado con `ICANN` (Internet Corporation For Assigned Names and Numbers), que coordina el espacio de direcciones IP globales y el sistema de nombres de dominio.
-
-> Los registros de nombres de dominios (como namecheap) estan acreditados por `ICANN` para vender nombres de dominio al publico.
-
-### Infraestructura de red
-
-- __Direcciones IP publicas:__ Son unicas en internet.
-- __Direcciones IP privadas:__ Son unicas dentro de una red local
-
-- Una direccion IP puede indicarse de forma permanente asignada a un dispositivo, o dinamica cambiando con el tiempo.
-
-> Las direcciones IP dinamicas se utilizan comunmente para conexiones a internet residenciales.
-
-#### Firewalls
-
-Monitorean y controlan el trafico de red entrante y saliente dentro de un dispositivo
-
-#### Puertos
-
-Los procesos o servicios especificos se identifican mediante puertos que cuando se combina con una direccion IP, crean un identificador unico para un servicio de red.
-
-Algunos puertos estan reservados para protocolos especificos como 80 para HTTP o 22 para SSH.
+| Servicio | Puerto |
+| -------- | ------ |
+| HTTP     | 80     |
+| HTTPS    | 443    |
+| SSH      | 22     |
+| MySQL    | 3306   |
