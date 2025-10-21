@@ -121,4 +121,6 @@ Cuantos datos el sistema puede manejar sobre cierto periodo de tiempo.
 
 #### Latencia
 
-Cuanto tiempo se tarde en manejar una sola peticion.
+Cuanto tiempo se tarde en manejar una sola peticion y entregar una respuesta.
+
+## Conceptos basicos de redes
