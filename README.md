@@ -163,9 +163,9 @@ pm2 logs api-prod
 
 ## Pilares del diseño de sistemas
 
-- Eficiencia: Uso optimo de recursos.
-- Mantenibilidad: Facilidad para entender y modificar el sistema.
-- Escalabilidad: Capacidad de crecer con la demanda.
+- __Eficiencia:__ Uso optimo de recursos.
+- __Mantenibilidad:__ Facilidad para entender y modificar el sistema.
+- __Escalabilidad:__ Capacidad de crecer con la demanda.
 
 ## Elementos clave en el diseño de sistemas
 
@@ -189,39 +189,28 @@ mysqldump -u user -p database > backup.sql
 
 - Limpieza, normalizacion y conversion a formatos utiles (JSON, CSV, XML).
 
-### Teorema CAP (Consistencia, Disponibilidad y Toleracion a la Particion)
+### Teorema CAP
 
-#### Consistencia (Consistency)
+Un sistema distribuido puede cumplir solo 2 de las siguientes propiedades:
 
-Todos los nodos del sistema distribuido tienen los mismos datos. Si se hace un cambio en un nodo, este debe reflejarse de forma inmediata en el resto.
+- __Consistencia (C):__ Todos los nodos tienen los mismos datos
+- __Disponibilidad (A):__ El sistema siempre responde
+- __Tolerancia a la particion (P):__ Funciona incluso si hay fallas en la red
 
-#### Disponibilidad (Availability)
+#### Tipo de sistema
 
-El sistema siempre debe estar disponible respondiendo a las solicitudes de los usuarios.
+- __CA:__ Bases de datos tradicionales (SQL)
+- __CP:__ MongoDB, HDFS
+- __AP:__ CouchDB, Cassandra
 
-#### Tolerancia a la particion (Partition Tolerance)
+## Metricas de rendimiento
 
-Si hay una interrupcion en la comunicacion entre los nodos, el sistema debe seguir funcionando.
+- __RPS:__ Request per second - peticiones que puede manejar un servidor
+- __QPS:__ Queries per second - consultas por segundo en la base de datos
+- __B/s:__ Bytes por segundo transferidos
+- __Latencia:__ Tiempo de respuesta por solicitud
 
-> Un sistema distribuido solo puede lograr 2 propiedades del teorema a la vez, (CA, CP, AP).
-
-- __Confiabilidad:__ Garantizar que el sistema funcione de manera correcta y consistente.
-- __Tolerancia al fallo:__ Prepararse de forma adecuada para cuando el sistema falle o sea atacado.
-- __Redundancia:__ Tener copias de seguridad en caso de que el sistema.
-
-### Velocidad
-
-#### Rendimiento
-
-Cuantos datos el sistema puede manejar sobre cierto periodo de tiempo.
-
-- __Rendimiento del servidor - RPS:__ Entre mas alto sea el valor del `RPS` indica mejor rendimiento.
-- __Rendimiento de la base de datos - QPS:__ Cantidad de consultas que la base de datos puede procesar en un segundo.
-- __Rendimiento de datos - B/s:__ Cantidad de datos transferidos a traves de una red o procesados por un sistema.
-
-#### Latencia
-
-Cuanto tiempo se tarde en manejar una sola peticion y entregar una respuesta.
+> Ejemplo: Si un servidor procesa 1000 peticiones/s con 50ms de latencia promedio, su rendimiento es alto y estable.
 
 ## Conceptos basicos de redes
 
