@@ -288,14 +288,14 @@ Es un protocolo de comunicacion basado en TCP/IP, el cual sigue un modelo de pet
 
 En aplicaciones modernas se utilizan cookies, tokens o sesiones para mantener la informacion del usuario entre peticiones.
 
-```http
+```bash
 GET /productos HTTP/1.1
 Host: tienda.com
 ```
 
 El cliente pide la lista de productos. El servidor responde con un JSON o HTML que contiene esa informacion.
 
-```http
+```bash
 HTTP/1.1 200 OK
 Content-Type: application/json
 
@@ -409,40 +409,95 @@ Operaciones basicas de cualquier operacion basada en datos:
 - Menos legible para humanos
 - Requiere soporte HTTP/2
 
-### Endpoints
+##### Endpoints
 
-```http
+```bash
 # peticion GET para obtener unicamente 100 productos, lo cual evita la saturacion al obtener grandes cantidades de datos sin control
 GET /products/products?limit=100&offset=0
 ```
 
-- Las consultas GET deben ser idempotentes, es decir que no importa cuantas veces se realice la petiicion siempre se debe enviar el mismo resultado y no modificar ningun dato en el servidor.
+> Las consultas GET deben ser idempotentes, es decir que no importa cuantas veces se realice la petiicion siempre se debe enviar el mismo resultado y no modificar ningun dato en el servidor.
 
 ### Caching (Almacenamiento en cache)
 
 El cache se utiliza para mejorar el rendimiento y la eficienda de los sistemas al almacenar temporalmente copias de datos o resultados que se consultan con frecuencia.
 
-#### Cache en el navegador
+##### Tipos de cache
 
-La cache de los sitios web se almacena en el disco duro del usuario administrado por el navegador (los paquetes de datos que se almacenan son HTML, CSS y JS), de tal manera que cuando el sitio sea revisitado, se accede a los datos almacenados en cache en lugar de buscar toda la informacion en el servidor nuevamente.
+##### Cache en el navegador
+
+El navegador web almacena copias de recursos estaticos (HTML, CSS, JS, imagenes, fuentes, etc.) en el disco duro del usuario. Cuando el sitio se vuelve a vistar, el navegador usa los archivos almacenados en vez de volver a descargarlos del servidor, reduciendo el tiempo de carga y consumo de ancho de banda.
+
+Ejemplo:
+
+- La primera vez que se ingresa a `https://www.mipagina.com`, el navegador descarga main.css, app.js e imagenes.
+- La segunda vez, el navegador los sirve desde su cache local, a menos que hayan expirado o el servidor indique que hay versiones nuevas.
+
+Cabeceras HTTP relacionadas
+
+```bash
+Cache-Control: max-age=86400
+ETag: "v1.0.0"
+Last-Modified: Wed, 21 Oct 2025 10:00:00 GMT
+```
+
+> Estas cabeceras indican por cuanto tiempo mantener el recurso en cache y como verificar si hay una nueva version.
 
 #### Cache en el servidor
 
-Se almacenan en el servidor o un servidor de cache separado, ya sea en memoria como Redis o en disco. Normalmente el servidor verifica la cache de los datos antes de consultar a la base de datos. Si los datos estan en la cache se devuelven directamente, en caso contrario se consultan de la base de datos, los devuelve al usuario y luego los almacena en cache para futuras solicitudes.
+El servidor puede usar un sistema de cache (Redis, Memcached o Varnish) para almacenar datos generados o consultados con frecuencia:
 
-- Cache de derecha a izquierda: Los datos se escriben en la cache
-- Cache de derecha a derecha: Los datos se escriben directamente en el almacenamiento permanente
+- Resultados de consultas a bases de datos
+- Respuestas de APIS externas
+- Paginas renderizadas dinamicamente
 
-##### Politicas para la desaolojo de cache en el servidor
+Flujo tipico
 
-- Eliminar los datos menos utilizados recientemente
-- Los datos que primero entran son los que primero salen
+1. El servidor recibe una solicitud
+2. Verifica si el resultado esta en la cache
+  - Si esta, lo devuelve inmediatamente
+  - Si no esta, consulta la base de datos, guarda el resultado en cache y lo devuelve
+
+```js
+const cacheKey = 'usuario:123'
+let usuario = cache.get(cacheKey)
+
+if (!usuario) {
+  usuario = db.query('SELECT * FROM USUARIOS WHERE id = 123')
+  cache.set(cacheKey, usuario)
+}
+
+return usuario
+```
+
+##### Politicas de escritura de cache
+
+En los sistemas de servidor o base de datos, existen estrategias para decidir cuando y como se actualiza la cache.
+
+- Write-through: Cada vez que se escriben datos en la base de datos se actualizan en cache.
+- Write-back (write behind): Los datos se escriben primero en la cache y mas tarde se actualizan en la base de datos.
+- Write-around: Los datos se escriben solo en la base de datos y se cargan en la cache solo cuando se consultan.
+
+##### Politicas de desalojo (cache eviction)
+
+Como el cache tiene capacidad limitada, cuando se llena se deben eliminar entradas antiguas o poco usadas.
+
+- LRU (Last Recently Used): Menos recientemente usado.
+- FIFO (First In, First Out): Primero en entrar, primero en salir.
+- LFU (Last Frequently Used): Menos frecuentemente usado.
+- TTL (Time To Live): Cada dato expira tras cierto tiempo
 
 #### Cache en la base de datos
 
-Almacenar los resultados de las consultas para mejorar el rendimiento de las aplicaciones controladas por base de datos. A menudo se realiza dentro del mismo sistema de base de datos o mediante una capa de almacenamiento en cache externa como Redis o Memcache. 
+Las bases de datos implementan mecanismos de cache, ya sea internamente o mediante herramientas externas (Redis o Memcached).
 
-- Se verifica en cache para validar si el resultado de la consulta se ha almacenado, de ser asi se devuelve el resultado del estado de la cache evitando la necesita de ejecutar la consulta en la base de datos. Si el resultado de la consulta no se encuentra en la cache, se ejecuta la consulta en base de datos y posteriormente se almacena en la cache para futuras solicitudes.
-- Se usan las mismas politicas de desalojo de la cache que en el servidor.
+El objetivo es almacenar los resultados de consultas comunes para evitar repetir calculos o accesos costosos.
 
-### CDN
+Flujo tipico:
+
+1. La aplicacion solicita una consulta.
+2. Se verifica si ese resultado ya esta en la cache.
+   - Si esta se devuelve desde la cache
+   - Si no esta, se ejecuta la consulta, se guarda el resultado en cache y se devuelve.
+
+> Redis es ideal porque opera en memoria RAM, ofreciendo tiempos de respuesta en milisegundos.
