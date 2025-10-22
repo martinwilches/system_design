@@ -18,11 +18,13 @@ Un sistema informatico esta compuesto por capas optimizadas, cada una encargadas
 - __SSD:__ (Solid State Drive), disco de estado solido. No contiene partes moviles, mayor velocidad de lectura y escritura.
 
 Ver los discos conectados
+
 ```bash
 lsblk
 ```
 
 Montar un disco SSD
+
 ```bash
 sudo mount /dev/sda1 /mnt/ssd
 ```
@@ -37,6 +39,7 @@ sudo mount /dev/sda1 /mnt/ssd
 > Cuando se abre un proyecto en VSCode, el codigo se carga en RAM para poder editarlo sin leer el disco cada segundo.
 
 Monitorear el uso de RAM (Linux)
+
 ```bash
 free -h
 ```
@@ -58,6 +61,7 @@ Existen varios niveles.
 Responsable de obtener, decodificar y ejecutar instrucciones.
 
 > Ejemplo: Un archivo .cpp se compila con g++ y genera un ejecutable en lenguaje maquina
+
 ```bash
 g++ programa.cpp -o programa
 ./programa
@@ -105,6 +109,7 @@ jobs:
 Distribuyen las solicitudes entre mmultiples servidores.
 
 Ejemplo con NGINX
+
 ```nginx
 upstream app_cluster {
   server app1.local:3000;
@@ -131,6 +136,7 @@ Permite almacenar datos fuera del servidor principal (por ejemplo, backups o arc
 - NAS (Network Attached Storage)
 
 Configuracion tipica (Laravel `.env`)
+
 ```env
 FILESYSTEM_DISK=s3
 AWS_BUCKET=myapp-bucket
@@ -144,10 +150,12 @@ Controlan la salud del sistema, registran errores y miden rendimiento.
 #### Herramientas comunes
 
 - __PM2:__ Monitoreo de proceso Node.js
+
 ```bash
 pm2 start server.js --name api-prod
 pm2 logs api-prod
 ```
+
 - __Sentry:__ Captura errores en frontend y backend
 - __Grafana / Prometheus:__ Metricas de rendimiento y alertas
 
@@ -181,6 +189,7 @@ pm2 logs api-prod
 - Respaldos automaticos (cron + AWS S3)
 
 Crear una copia de seguridad de una base de datos MySQL completa y guardarla en un arhivo .sql.
+
 ```bash
 mysqldump -u user -p database > backup.sql
 ```
@@ -234,6 +243,7 @@ Cada paquete IP incluye:
 Convierte la informacion en un formato transferible por red
 
 Ejemplo de solicitud HTTP
+
 ```pgsql
 GET /index.html HTTP/1.1
 Host: www.ejemplo.com
@@ -247,7 +257,7 @@ Accept-Language: es-ES
   - Usado en HTTP, FTP, SSH.
 - __UDP:__ Rapido, sin conexion, se pueden perder paquetes de datos.
   - Usando en videollamadas, juegos online.
- 
+
 ### DNS (Domain Name Service)
 
 Traduce nombres de dominio a IPs
@@ -294,7 +304,7 @@ Es un protocolo de comunicacion basado en TCP/IP, el cual sigue un modelo de pet
   - 429 Too Many Requests - El servidor ha enviado muchas peticiones en un corto periodo de tiempo
 - 5xx Server Error Codes
   - 500 Internal Server Error - Mensaje de error generico cuando el servidor encuentra una condicion inesperada
- 
+
 #### Metodos HTTP
 
 - __GET:__ Obtener datos
@@ -302,3 +312,7 @@ Es un protocolo de comunicacion basado en TCP/IP, el cual sigue un modelo de pet
 - __PUT:__ Modificar un recurso existente
 - ___PATCH:__ Modificar informacion especifica de un recurso existente
 - __DELETE:__ Eliminar datos
+
+### WebSockets
+
+Proporcionan un canal de comunicacion bidireccional a traves de una unica conexion que permite a los servidores enviar actualizaciones de tiempo real a los clientes (por ejemplo una aplicacion de chat en linea), ya que no se sobrecarga el sistema con el ciclo de peticiones-respuesta HTTP.
