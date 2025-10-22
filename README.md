@@ -284,7 +284,26 @@ nslookup google.com
 
 ### HTTP (HyperText Transfer Protocol)
 
-Es un protocolo de comunicacion basado en TCP/IP, el cual sigue un modelo de peticion-respuesta. HTTP es un protocolo sin estado (stateless) lo que significa que el servidor no guarda informacion sobre las peticiones anteriores, por lo cual toda la informacion relevante debe enviarse en cada solicitud.
+Es un protocolo de comunicacion basado en TCP/IP, el cual sigue un modelo de peticion-respuesta entre un cliente-servidor. HTTP es un protocolo sin estado (stateless) lo que significa que el servidor no guarda informacion sobre las peticiones anteriores, por lo cual toda la informacion relevante debe enviarse en cada solicitud.
+
+En aplicaciones modernas se utilizan cookies, tokens o sesiones para mantener la informacion del usuario entre peticiones.
+
+```http
+GET /productos HTTP/1.1
+Host: tienda.com
+```
+
+El cliente pide la lista de productos. El servidor responde con un JSON o HTML que contiene esa informacion.
+
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+[
+  {"id": 1, "nombre": "Camisa"},
+  {"id": 2, "nombre": "Pantalon"}
+]
+```
 
 #### Codigos de estado
 
@@ -310,9 +329,44 @@ Es un protocolo de comunicacion basado en TCP/IP, el cual sigue un modelo de pet
 - __GET:__ Obtener datos
 - __POST:__ Crear datos en el servidor
 - __PUT:__ Modificar un recurso existente
-- ___PATCH:__ Modificar informacion especifica de un recurso existente
+- __PATCH:__ Modificar informacion especifica de un recurso existente
 - __DELETE:__ Eliminar datos
 
 ### WebSockets
 
-Proporcionan un canal de comunicacion bidireccional a traves de una unica conexion que permite a los servidores enviar actualizaciones de tiempo real a los clientes (por ejemplo una aplicacion de chat en linea), ya que no se sobrecarga el sistema con el ciclo de peticiones-respuesta HTTP.
+Permiten una comunicacion bidireccional en tiempo real entre el cliente y el servidor a traves de una unica conexion persistente.
+
+A diferencia de HTTP (donde el cliente siempre inicia la comunicacion), con WebSockets ambas partes pueden enviar mensajes en cualquier momento, sin necesidad de abrir nuevas conexiones.
+
+Ideal para:
+- Aplicaciones de chat en linea
+- Juegos multijugador
+- Sistemas de monitoreo o notificaciones en tiempo real
+
+### Protocolos relacionados con el correo electronico
+
+- __SMTP:__ (Simple Mail Transfer Protocol), se usa ara enviar correos desde un cliente hacia un servidor o entre servidores. Ejemplo cuando desde Gmail se envia un correo electronico a otra persona.
+- __IMAP:__ (Internet Message Access Protocol), permite acceder al correo directamente en el servidor, sin necesidad de descargarlo completamente. Ideal si se consulta el mismo buzon desde varios dispositivos.
+- __POP3:__ (Post Office Protocol v3), permite descargar los correos a un dispositivo local y por lo general los elimina del servidor.
+
+Ejemplo:
+
+- Los clientes de correo (Outllok, Gmail), utilizan SMTP para enviar un mensaje.
+- El servidor del destinatario usa IMAP o POP3 para recibirlo o consultarlo.
+
+### Protocolos de transferencia de archivos
+
+Estos protocolos se usan para mover archivos entre sistemas, especialmente entre un cliente y un servidor remoto.
+
+- __FTP:__ (File Transfer Protocol), es el protocolo tradicional para transferir archivos. Funciona con un cliente FTP (como FileZilla) y un servidor.
+- __SSH:__ (Secure Shell), protocolo seguro que permite acceder a maquinas remotas y transferir archivos de manera cifrada. Comun en administracion de servidores Linux.
+
+Ejemplo SSH:
+
+````bash
+# Conexion a un servidor remoto
+ssh usuario@192.168.1.10
+
+# Transferencia de archivos con SCP (basado en SSH)
+scp archivo.txt usuario@192.168.1.10:/home/usuario/
+```
