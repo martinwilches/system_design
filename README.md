@@ -363,10 +363,86 @@ Estos protocolos se usan para mover archivos entre sistemas, especialmente entre
 
 Ejemplo SSH:
 
-````bash
+```bash
 # Conexion a un servidor remoto
 ssh usuario@192.168.1.10
 
 # Transferencia de archivos con SCP (basado en SSH)
 scp archivo.txt usuario@192.168.1.10:/home/usuario/
 ```
+
+### Procolos de comunicacion en tiempo real
+
+- __WebRTC:__ Permite la comunicacion directa de audio, video y archivos entre navegadores.
+- __MQTT:__ (Message Queuing Telemetry Transport), protocolo ligero ideal para IoT (Internet of Things), donde los dispositivos tienen pocos recursos o conexiones inestables
+- __AMQP:__ (Advanced Message Queuing Protocol), protocolo de mensajeria diseñado para el intercambio de mensajes entre sistemas o servicios de forma segura.
+
+## Diseño de API
+
+### CRUD
+
+Operaciones basicas de cualquier operacion basada en datos:
+
+- CREATE -> Crear datos -> POST/api/products
+- READ -> Obtener datos -> GET /api/products
+- UPDATE -> Actualizar datos -> PUT /api/products/:id
+- DELETE -> Eliminar datos -> DELETE /api/products/:id
+
+### Paradigmas de las API
+
+#### REST
+
+- Stateless
+- Usa metodos estandar HTTP para la comunicacion
+- JSON para el intercambio de datos
+- Se pueden obtener datos excesivos e innecesarios o datos insuficientes
+
+#### GraphQL
+
+- Evitan la obtencion excesiva o insuficiente de datos (Se obtiene solo lo que se requiere)
+- Unicamente permite peticiones POST
+- Los errores se responden con el codigo de estado 200 incluyendo los detalles del error
+
+#### gRPC
+
+- Construido sobre HTTP/2
+- Menos legible para humanos
+- Requiere soporte HTTP/2
+
+### Endpoints
+
+```http
+# peticion GET para obtener unicamente 100 productos, lo cual evita la saturacion al obtener grandes cantidades de datos sin control
+GET /products/products?limit=100&offset=0
+```
+
+- Las consultas GET deben ser idempotentes, es decir que no importa cuantas veces se realice la petiicion siempre se debe enviar el mismo resultado y no modificar ningun dato en el servidor.
+
+### Caching (Almacenamiento en cache)
+
+El cache se utiliza para mejorar el rendimiento y la eficienda de los sistemas al almacenar temporalmente copias de datos o resultados que se consultan con frecuencia.
+
+#### Cache en el navegador
+
+La cache de los sitios web se almacena en el disco duro del usuario administrado por el navegador (los paquetes de datos que se almacenan son HTML, CSS y JS), de tal manera que cuando el sitio sea revisitado, se accede a los datos almacenados en cache en lugar de buscar toda la informacion en el servidor nuevamente.
+
+#### Cache en el servidor
+
+Se almacenan en el servidor o un servidor de cache separado, ya sea en memoria como Redis o en disco. Normalmente el servidor verifica la cache de los datos antes de consultar a la base de datos. Si los datos estan en la cache se devuelven directamente, en caso contrario se consultan de la base de datos, los devuelve al usuario y luego los almacena en cache para futuras solicitudes.
+
+- Cache de derecha a izquierda: Los datos se escriben en la cache
+- Cache de derecha a derecha: Los datos se escriben directamente en el almacenamiento permanente
+
+##### Politicas para la desaolojo de cache en el servidor
+
+- Eliminar los datos menos utilizados recientemente
+- Los datos que primero entran son los que primero salen
+
+#### Cache en la base de datos
+
+Almacenar los resultados de las consultas para mejorar el rendimiento de las aplicaciones controladas por base de datos. A menudo se realiza dentro del mismo sistema de base de datos o mediante una capa de almacenamiento en cache externa como Redis o Memcache. 
+
+- Se verifica en cache para validar si el resultado de la consulta se ha almacenado, de ser asi se devuelve el resultado del estado de la cache evitando la necesita de ejecutar la consulta en la base de datos. Si el resultado de la consulta no se encuentra en la cache, se ejecuta la consulta en base de datos y posteriormente se almacena en la cache para futuras solicitudes.
+- Se usan las mismas politicas de desalojo de la cache que en el servidor.
+
+### CDN
