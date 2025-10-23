@@ -501,3 +501,42 @@ Flujo tipico:
    - Si no esta, se ejecuta la consulta, se guarda el resultado en cache y se devuelve.
 
 > Redis es ideal porque opera en memoria RAM, ofreciendo tiempos de respuesta en milisegundos.
+
+### CDN (Content Delivery Network)
+
+Red de servidores distribuidos geograficamente diseñada para entregar contenido estatico (imagenes, videos, archivos CSS o JavaScript) de forma mas rapida y eficiente al usuario.
+
+En lugar de que cada solicitud viaje hasta el servidor de origen, el contenido se replica o almacena temporalmente en servidores distribuidos alrededor del mundo. Cuando un usuario accede al sitio, la solicitud se redirige al servidor CDN mas cercano, reduciendo la latencia y acelarando la carga.
+
+#### Funcionamiento
+
+1. El usuario solicita un recurso.
+2. La CDN determina cual de sus servidores esta mas cerca al usuario.
+3. Si el servidor CDN ya tiene el archivo en cache, lo entrega directamente.
+4. Si no lo tiene, lo descarga desde el servidor de origen, lo guarda en cache y luego lo envia al usuario.
+
+#### Tipos de CDN
+
+- __Pull-based CDN:__ El contenido se extrae directamente del servidor de origen cuando el usuario lo solicita por primera vez. Una vez obtenido, el CDN lo guarda en cache para futuras solicitudes. Ideal para sitios con mucho contenido estatico o paginas que se actualizan con cierta frecuencia.
+
+> Un blog con miles de imagenes subidas diariamente. La CDN las descarga del servidor principal cuando un visitante las solicita y las guarda para futuros accesos.
+
+- __Push-based CDN:__ El contenido se sube manualmente o mediante scripts a la CDN. Es util cuando los archivos son grandes (videos, instaladores o actualizaciones de software), cambian poco pero deben distribuirse rapidamente cuando lo hacen.
+
+Requieren mas control y administracion.
+
+> Una empresa de videojuegos que lanza una actualizacion de 5 GB la sube directamente a su CDN para que los jugadores de todo el mundo puedan descargarla sin saturar el servidor principal.
+
+#### Cuando se usa el servidor de origen
+
+- Se requiere contenido dinamico (como resultados personalizados, paneles de usuarios, sistemas de reservas)
+- Se realizan procesos en tiempo real que no pueden almacenarse en cache (como pagos o generacion de reportes)
+
+#### Beneficios
+
+- Menor latencia: El contenido se entrega desde un servidor geograficamente cercano al usuario.
+- Alta disponibilidad: Si un nodo falla, otro puede asumir la carga.
+- Seguridad mejorada: Muchos CDNs incluyen proteccion contra ataques DDoS, certificados SSL y filtro de trafico malicioso.
+- Menor carga en el servidor de origen.
+
+> Algunos ejemplos de CDN son Cloudflare, Akamai, Amazon CloudFront, Google Cloud CDN, Fastly.
