@@ -540,3 +540,11 @@ Requieren mas control y administracion.
 - Menor carga en el servidor de origen.
 
 > Algunos ejemplos de CDN son Cloudflare, Akamai, Amazon CloudFront, Google Cloud CDN, Fastly.
+
+## Servidores proxy
+
+Actuan como inteermediarios entre un cliente que solicita un recurso y el servidor que proporciona ese recurso.
+
+Puede utilizarse para varios propositos como almacenar en cache recursos que luego pueden accederse de forma mas rapida, anonimizar las solicitudes y equilibrar la carga entre varios servidores
+
+En esecnaia recibe las solicitudes de los clientes, las reenvia a los servidores correspondientes y luego devuelve la respuesta del servidor al cliente.
