@@ -543,8 +543,43 @@ Requieren mas control y administracion.
 
 ## Servidores proxy
 
-Actuan como inteermediarios entre un cliente que solicita un recurso y el servidor que proporciona ese recurso.
+Actua como intermediario entre un cliente (por ejemplo un navegador web), y el servidor que aloja el recurso solicitado (como una pagina web, API o archivo). En lugar de que el cliente se comunique directamente con el servidor de destino, la solicitu pasa primero por el proxy.
 
-Puede utilizarse para varios propositos como almacenar en cache recursos que luego pueden accederse de forma mas rapida, anonimizar las solicitudes y equilibrar la carga entre varios servidores
+### Funcionamiento basico
 
-En esecnaia recibe las solicitudes de los clientes, las reenvia a los servidores correspondientes y luego devuelve la respuesta del servidor al cliente.
+1. El cliente envia una solicitud al proxy.
+2. El proxy evalua la solcitud y decide si responder directamente (por ejemplo usando una copia en cache) o si debe reenviar la solicitud al servidor original.
+3. Si reenvia la solicitud, el servidor responde al proxy, y este devuelve la respuesta al cliente.
+
+> El proxy recibe, filtra y reenvia las solicitudes y respuestas entre un cliente y un servidor.
+
+### Propositos principales de un servidor proxy
+
+- __Cache de contenido:__ Almacena recursos solicitados con frecuancia (como imagenes o paginas web) para servirlos mas rapido en futuras solicitudes, reduciendo el consumo de ancho de banda.
+- __Anonimato y privacidad:__ Oculta la direccion IP del cliente al servidor de destino, protegiendo la identidad del usuario.
+- __Filtrado de control y procesos:__ Permite bloquear o permitir el acceso a ciertos sitios web o tipos de contenido.
+  - En una empresa, el proxy bloquea redes sociales o paginas de entretenimiento durante el horario laboral.
+- __Equilibrio de carga (Load Balancing):__ Distribuye las solicitudes entre varios servidores backend para optimizar el rendimiento y evitar sobrecarga.
+  - Un proxy balanceador de carga en un sitio de comercio electronico redirige usuarios entre varios servidores segun el trafico.
+- __Seguridad:__ Actua como barrera entre la red interna y el exterior, filtrando trafico malicioso y previniendo ataques directos.
+
+### Tipos de servidores proxy
+
+1. __Proxy directo:__ Se ubica entre los clientes y el servidor de destino, es el mas comun.
+  - Ejemplo, un proxy corporativo que controla y registra el trafico de los empleados.
+2. __Proxy inverso:__ Se situa delante de uno o varios servidores web y gestiona las solicitudes entrantes desde Internet hacia esos servidores.
+  - Ejemplo, Nginx configurado como proxy inverso para distribuir las peticiones entre varios servidores de aplicacion.
+3. __Proxy transparente:__ No modifica las solicitudes ni las respuestas, a menudo los usuarios ni siquiera saben que estan usando uno.
+  - Ejemplo, un proveedor de Internet que usa proxies transparentes para optimizar la velocidad de acceso.
+4. __Proxy anonimo:__ Oculta la identidad del cliente, pero se identifica ante el servidor como un proxy.
+  - Ejemplo, navegacion privada que muestra la IP del proxy, no del usuario.
+5. __Proxy de cache:__ Diseñado principalmente para almacenar copias de contenido y servirlas localmente, mejorando la velocidad.
+6. __Proxy SSL/HTTPS:__ Cifra las comunicaciones entre el cliente y el proxy, proporcionando seguridad adicional en conexiones cifradas.
+
+#### Ejemplos de software de proxy populares
+
+- Squid
+- Nginx
+- HAProxy
+- Apache Traffic Server
+- Privoxy
