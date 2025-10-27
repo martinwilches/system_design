@@ -583,3 +583,60 @@ Actua como intermediario entre un cliente (por ejemplo un navegador web), y el s
 - HAProxy
 - Apache Traffic Server
 - Privoxy
+
+## Balanceadores de carga (Load Balancers)
+
+Sistema que distribuye el trafico entrante entre varios servidores o recursos para optimizar el rendimiento, la disponibilidad y la fiabilidad de los ervicios. En pocas palabras evita que un solo servidor se sature y asegura que todos trabajen de forma equilibrada.
+
+### Objetivo principal
+
+Repartir las solicitudes de los clientes de manera eficiente entre servicios backend, de modo que:
+
+- Ningun servidor se sobrecargue
+- El sistema siga disponible incluso si uno de los servidores falla
+- Las respuestas sean rapidas y estables
+
+> Un sitio web de comercio electronico recibe miles de solicitudes por segundo. El balanceador reparte esas peticiones entre varios servidores para que todos los usuarios tengan una buena experiencia sin caidas ni lentitud.
+
+### Funcionamiento basico
+
+1. El cliente (navegador, app, etc), envia una solicitud al balanceador de carga.
+2. El balanceador analiza la solicitud y decide a que servidor enviarla segun su algoritmo.
+3. El servidor atiende la solicitud y responde al balanceador.
+4. El balanceador devuelve la respuesta al cliente.
+
+### Algoritmos de balanceo comunes
+
+- __Round Robin:__ Envia las solicitudes en orden secuencial a cada servidor (uno por turno). Se usa cuando todos los servidores tienen capacidad similar.
+- __Least Connections:__ Envia la solicitud al servidor con menos conexiones activas. Ideal cuando las cargas son variables o las solicitudes durante distinto tiempo.
+- __IP Hash:__ Asigna los clientes a servidores segun su direccion IP. Util cuando se necesita mantener la sesion del usuario en el mismo servidor.
+- __Weighted Round Robin:__ Igual a Round Robin pero da mas trafico a servidores con amyor capacidad.
+- __Random:__ Asigna las solicitudes a servidores al azar.
+
+### Tipos de balanceadores de carga
+
+1. __Balanceador de capa 4 (Transporte):__ Opera en las capas TCP/UDP. 
+  - Ejemplo, HAProxy configurado para distribuir trafico TCP entre servidores web
+2. __Balanceador de capa 7 (Aplicacion):__ Trabaja en la capa de la aplicacion (HTTPS/ HTTP, etc).
+  - Ejemplo, Nginx como proxy inverso que redirige /api a un servidor y /static a otro.
+3. __Balanceador DNS (Round Robin DNS):__ Usa el sistema DNS para repartir las solicitudes entre varias direcciones IP.
+  - Ejemplo, un dominio configurado con 3 IP diferentes para repartir trafico globalmente.
+4. __Balanceadores en la nube:__ Servicios ofrecidos por proveedores de infraestructura para escalara automaticamente segun la demanda, por ejemplo AWS Elastic Load Balancer (ELB).
+
+### Beneficios del balanceo de carga
+
+- Alta disponibilidad
+- Escalabilidad
+- Rendimiento
+- Seguridad
+- Mantenimiento sin interrupcion
+
+#### Ejemplo practico
+
+```markdown
+Cliente -> Balanceador  -> Servidor 1
+                        -> Servidor 2
+                        -> Servidor 3
+```
+
+> El balanceador reparte las solicitudes de los usuarios entre los 3 servidores disponibles. Si el servidor 2 falla, automaticamente las nuevas solicitudes se envian al 1 y al 3.
