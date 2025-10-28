@@ -640,3 +640,54 @@ Cliente -> Balanceador  -> Servidor 1
 ```
 
 > El balanceador reparte las solicitudes de los usuarios entre los 3 servidores disponibles. Si el servidor 2 falla, automaticamente las nuevas solicitudes se envian al 1 y al 3.
+
+## Bases de datos
+
+### Tipos de bases de datos
+
+#### Relacionales
+
+Se usan tablas para el almacenamiento de los datos y se usa SQL como lenguaje de consulta.
+
+##### Propiedades ACID
+
+- __Atomicity (Atomicidad):__ Las transacciones son todo o nada.
+- __Consistency (Consistencia):__ Despues de una transaccion, la base de datos debe estar en un estado consistente.
+- __Isolation (Aislamiento):__ Las transacciones deben ser independientes.
+- __Durabilidad (Durability):__ Una vez que se confirma la transaccion, los datos deben permanecer.
+
+#### Bases de datos no relacionales (NoSQL)
+
+No tienen esquema, no tienen claves externas que vinculen los datos. Ideal para escalabilidad y consultas simples.
+
+#### Bases de datos en memoria
+
+Todo esta en memoria y la obtencion de los datos se realiza de forma rapida (Redis, Memcached). Se usan principalmente para almacenamiento en cache.
+
+### Escalamiento de bases de datos
+
+- Vertical: Aumentar poder de la CPI, añadir mas RAM, añadir mas espacio en disco
+- Horizontal: Distribuir datos en un cluster de maquinas (fragmentacion de datos o replicacion de datos)
+
+#### Sharding (Fragmentacion)
+
+Distribuir diferentes porciones de fragmentos del conjunto de datos en varios servidores
+
+##### Estrategias de fragmentacion
+
+- Basada en rango
+- Basada en directorio
+- Geografica
+
+#### Replicacion de datos
+
+Mantener copias de datos en diferentes servidores para una alta disponibilidad.
+
+- Master: Bases esclavas de solo lectura
+- Master->Master: Multiples bases de datos que pueden leer y escribir datos.
+
+### Rendimiento de bases de datos
+
+- Cache
+- Indexacion
+- Optimizacion de consultas
