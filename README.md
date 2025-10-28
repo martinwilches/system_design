@@ -643,51 +643,121 @@ Cliente -> Balanceador  -> Servidor 1
 
 ## Bases de datos
 
+Una base de datos es un sistema para almacenar, organizar y acceder a datos de forma estructurada o semiestructurada.
+
 ### Tipos de bases de datos
 
-#### Relacionales
+#### Bases de datos relacionales (SQL)
 
-Se usan tablas para el almacenamiento de los datos y se usa SQL como lenguaje de consulta.
+- __Estructura:__ Usan tablas (filas y columnas) con relaciones entre ellas mediante claves primarias y foraneas.
+- __Lenguaje de consulta:__ SQL.
+
+> Ejemplos: MySQL, PostgreSQL, Oracle, SQL Server
+
+##### Ventajas
+
+- Datos consistentes y normalizados
+- Soportan transacciones complejas
+- Garantizan propiedades ACID
 
 ##### Propiedades ACID
 
-- __Atomicity (Atomicidad):__ Las transacciones son todo o nada.
-- __Consistency (Consistencia):__ Despues de una transaccion, la base de datos debe estar en un estado consistente.
-- __Isolation (Aislamiento):__ Las transacciones deben ser independientes.
-- __Durabilidad (Durability):__ Una vez que se confirma la transaccion, los datos deben permanecer.
+- __Atomicity (Atomicidad):__ La transaccion se ejecuta completamente o no se ejecuta.
+- __Consistency (Consistencia):__ Despues de una transaccion, los datos deben seguir las reglas de integridad, por ejemplo no se puede tener un saldo negativo si hay una regla que lo prohiba.
+- __Isolation (Aislamiento):__ Las transacciones simultaneas no deben interferirse, por ejemplo si 2 usuarios estan comprando el ultimo producto al mismo tiempo, no pueden ambos obtenerlo.
+- __Durabilidad (Durability):__ Una vez confirmada la transaccion, los datos permanecen incluso si el sistema falla, por ejemplo si se hace un deposito de dinero y el servidor se apaga, el registro debe seguir existiendo.
 
 #### Bases de datos no relacionales (NoSQL)
 
-No tienen esquema, no tienen claves externas que vinculen los datos. Ideal para escalabilidad y consultas simples.
+No tienen un esquema fijo, (sin tablas ni relaciones formales). No siempre garantizan ACID completo; suelen priorizar disponibilidad y particion (CAP).
+
+##### Tipos comunes
+
+- Documentales: MongoDB usa (JSON/BSON)
+- Clave-Valor: Redis, DynamoDB
+- Columnar: Cassandra, HBase
+- Grafos: Neo4j
+
+Ejemplo:
+
+En MongoDB se pueden guardar documentos como:
+
+```json
+{
+  "usuario": "Martin",
+  "edad": 25
+}
+```
 
 #### Bases de datos en memoria
 
-Todo esta en memoria y la obtencion de los datos se realiza de forma rapida (Redis, Memcached). Se usan principalmente para almacenamiento en cache.
+Mantienen los datos en RAM, no en disco, por lo que son extremadamente rapidas. Se usan para cacheo, colas o sesiones temporales.
+
+Ejemplos: Redis, Memcached.
+
+##### Uso tipico
+
+Guardar resultados de consultas frecuentes
+
+```text
+clave: "usuario:123",
+valor: "{nombre: "Martin", edad: 25}"
+```
 
 ### Escalamiento de bases de datos
 
-- Vertical: Aumentar poder de la CPI, añadir mas RAM, añadir mas espacio en disco
-- Horizontal: Distribuir datos en un cluster de maquinas (fragmentacion de datos o replicacion de datos)
+Cuando una base de datos crece demasiado, hay 2 caminos:
 
-#### Sharding (Fragmentacion)
+#### Escalamiento vertical
 
-Distribuir diferentes porciones de fragmentos del conjunto de datos en varios servidores
+Aumentar recursos en un solo servidor
 
-##### Estrategias de fragmentacion
+- Mas CPU
+- Mas RAM
+- Mejor rendimiento
 
-- Basada en rango
-- Basada en directorio
-- Geografica
+Ejemplo: Pasar de un VPS con 4GB de RAM a uno con 16GB
 
-#### Replicacion de datos
+> Desventaja: Hay un limite fisico
 
-Mantener copias de datos en diferentes servidores para una alta disponibilidad.
+#### Escalamiento horizontal
 
-- Master: Bases esclavas de solo lectura
-- Master->Master: Multiples bases de datos que pueden leer y escribir datos.
+Dividir o replicar los datos en varios servidores (clusters).
 
-### Rendimiento de bases de datos
+##### Sharding (Fragmentacion)
 
-- Cache
-- Indexacion
-- Optimizacion de consultas
+Dividir el conjunto de datos en fragmentos mas pequeños distribuidos entre nodos.
+
+Estrategias de fragmentacion:
+
+- Por rango: Usuarios con ID 1-1000 en el servidor A, 1001-2000 en el servidor B
+- Por directorio o hash: El hash del ID determina el servidor
+- Geografica: Usuarios de Europa en un datacenter europeo, los de America en uno americano
+
+##### Replicacion de datos
+
+Mantener copias sincronizadas de los mismos datos en varios servidores
+
+Tipos:
+
+- Master-Slave: El master acepta escritura, los slave son de solo lectura
+- Master-Master: Varios servidores pueden leer y escribir
+
+> Ejemplo: Una app de comercio electronico puede tener lecturas (productos, reviews) desde replicas y escrituras (pedidos, usuarios nuevos) solo en el master.
+
+### Rendimiento y optimizacion
+
+#### Cache
+
+Almacenar temporalmente los resultados de consultas frecuentes o costosas
+
+#### Indexacion
+
+Crear indices sobre columnas muy consultadas para acelerar busquedas
+
+> Ejemplo, indexar `email` en una tabla `usuarios` para buscar por correo mas rapido
+
+#### Optimizacion de consultas
+
+- Evitar `SELECT *`
+- Usar `JOIN` solo cuando sea necesario
